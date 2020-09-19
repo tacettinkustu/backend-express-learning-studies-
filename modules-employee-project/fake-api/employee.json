@@ -1,0 +1,16 @@
+{
+  "employees": [
+    {
+      "name": "Tacettin Küstü",
+      "department": "bilişim",
+      "salary": 5000,
+      "id": 1
+    },
+    {
+      "name": "Ali Veli Küstü",
+      "department": "bilişim",
+      "salary": 4000,
+      "id": 2
+    }
+  ]
+}
