@@ -11,12 +11,15 @@ const updateEmployeeButton = document.getElementById("update");
 const request = new Request("http://localhost:3000/employees");
 const ui = new UI();
 
+let updateState = null;
+
 eventListeners();
 
 function eventListeners() {
   document.addEventListener("DOMContentLoaded", getAllEmployees);
   form.addEventListener("submit", addEmployee);
   employeesList.addEventListener("click", UpdateOrDelete);
+  updateEmployeeButton.addEventListener("click",updateEmployee)
 }
 
 function getAllEmployees() {
@@ -56,6 +59,7 @@ function UpdateOrDelete(e) {
   if (e.target.id === "delete-employee") {
     deleteEmployee(e.target);
   } else if (e.target.id === "update-employee") {
+    updateEmployeeController(e.target.parentElement.parentElement);
   }
 }
 
@@ -69,4 +73,30 @@ function deleteEmployee(targetEmployee) {
       ui.deleteEmployeeFromUI(targetEmployee.parentElement.parentElement);
     })
     .catch((err) => console.log(err));
+}
+
+function updateEmployeeController(targetEmployee){
+  ui.toggleUpdateButton(targetEmployee);
+
+  if(updateState===null){
+    updateState = {
+      updateId:targetEmployee.children[3].textContent,
+      updateParent : targetEmployee
+    }
+  }else{
+      updateState = null;
+
+  }
+}
+
+function updateEmployee(){
+  if(updateState){
+    const data = {name:nameInput.value.trim(),department:departmentInput.value.trim(),salary:Number(salaryInput.value.trim())}
+    request.put(updateState.updateId,data)
+    .then(updatedEmployee =>{
+      ui.updateEmployeeOnUI(updatedEmployee,updateState.updateParent)
+      
+    })
+    .catch(err=>console.log(err))
+  }
 }
